@@ -3,13 +3,13 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 terraform {
-  required_version = ">=0.9.2"
+  required_version = ">=0.12.0"
 }
 
 resource "aws_cloudformation_stack" "execute_lambda" {
-  name               = "${var.name}"
-  tags               = "${var.tags}"
-  timeout_in_minutes = "${var.timeout_in_minutes}"
+  name               = var.name
+  tags               = var.tags
+  timeout_in_minutes = var.timeout_in_minutes
 
   template_body = <<EOF
 {

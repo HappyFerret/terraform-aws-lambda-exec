@@ -1,3 +1,3 @@
 output "result" {
-  value = "${module.execute.result}"
+  value = module.execute.result
 }

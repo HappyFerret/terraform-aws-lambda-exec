@@ -1,6 +1,6 @@
 # This example uses locals which were introduced in Terrform 0.10
 terraform {
-  required_version = ">=0.10.4"
+  required_version = ">=0.12.0"
 }
 
 provider "aws" {
@@ -15,7 +15,7 @@ locals {
 module "execute" {
   source              = "../../"
   name                = "${replace(local.lambda_source_file_no_ext, "_", "-")}-example"
-  lambda_function_arn = "${aws_lambda_function.lambda.arn}"
+  lambda_function_arn = aws_lambda_function.lambda.arn
 
   lambda_inputs = {
     parameter_name     = "my_ssm_parameter"

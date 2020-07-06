@@ -4,7 +4,7 @@ locals {
 }
 
 data "template_file" "lambda_source_file" {
-  template = "${file("${path.module}/${local.lambda_source_file}")}"
+  template = file("${path.module}/${local.lambda_source_file}")
 
   vars {
     function_description = "text that is injected into the function"
@@ -16,18 +16,18 @@ data "archive_file" "lambda_source_file_zip" {
   output_path = "${path.module}/${local.lambda_source_file}.zip"
 
   source {
-    content  = "${data.template_file.lambda_source_file.rendered}"
-    filename = "${local.lambda_source_file}"
+    content  = data.template_file.lambda_source_file.rendered
+    filename = local.lambda_source_file
   }
 }
 
 resource "aws_lambda_function" "lambda" {
-  filename         = "${substr(data.archive_file.lambda_source_file_zip.output_path, length(path.cwd) + 1, -1)}"
-  function_name    = "${local.function_name}"
-  role             = "${aws_iam_role.lambda.arn}"
+  filename         = substr(data.archive_file.lambda_source_file_zip.output_path, length(path.cwd) + 1, -1)
+  function_name    = local.function_name
+  role             = aws_iam_role.lambda.arn
   handler          = "${local.lambda_source_file_no_ext}.handler"
-  source_code_hash = "${data.archive_file.lambda_source_file_zip.output_base64sha256}"
-  runtime          = "${local.runtime}"
+  source_code_hash = data.archive_file.lambda_source_file_zip.output_base64sha256
+  runtime          = local.runtime
   description      = "MANAGED BY TERRAFORM"
 }
 
@@ -71,6 +71,6 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "attach-policy" {
-  role       = "${aws_iam_role.lambda.name}"
-  policy_arn = "${aws_iam_policy.lambda_can_log.arn}"
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.lambda_can_log.arn
 }
